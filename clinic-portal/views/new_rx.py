@@ -804,17 +804,18 @@ def _parse(note: str) -> dict:
     api_key = ""
     try:
         api_key = st.secrets.get("ANTHROPIC_API_KEY", "")
-    except Exception:
-        pass
+    except Exception as e:
+        st.caption(f":orange[secrets unavailable: {e}]")
     if not api_key:
         api_key = os.environ.get("ANTHROPIC_API_KEY", "")
     if not api_key:
+        st.warning("No ANTHROPIC_API_KEY found — using regex fallback. Add the key in Streamlit Cloud → Manage app → Settings → Secrets.")
         return _mock_parse(note)
     try:
         client = anthropic.Anthropic(api_key=api_key)
         response = client.messages.create(
-            model="claude-haiku-4-5-20251001",
-            max_tokens=512,
+            model="claude-haiku-4-5",
+            max_tokens=1024,
             system=SYSTEM_PROMPT,
             messages=[{"role": "user", "content": note}],
         )
@@ -822,9 +823,10 @@ def _parse(note: str) -> dict:
         if raw.startswith("```"):
             raw = raw.split("```")[1]
             if raw.startswith("json"):
-                raw = raw[4:]
+                raw = raw[4:].strip()
         return json.loads(raw)
-    except Exception:
+    except Exception as e:
+        st.error(f"AI extraction failed: {type(e).__name__}: {e}")
         return _mock_parse(note)
 
 
