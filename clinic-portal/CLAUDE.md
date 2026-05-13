@@ -5,13 +5,23 @@
 ## What this is
 A Streamlit prototype of the Ruffy 2.0 clinic portal. The mental model: modern rebuild of Vetsource — same core workflows (client/pet management, write rxs, approve refill requests, track orders, see payouts) but Canadian, designed for autoship-default, with a calm KoalaVet-style aesthetic instead of Vetsource's web-1.0 form-and-page-reload feel.
 
-## How to run
+## Live demo
+https://ruffy-2-0.streamlit.app — auto-deployed from `main` on every push to https://github.com/Rafi-Ruffy/ruffy-2.0. The `ANTHROPIC_API_KEY` is stored in Streamlit Cloud's secret manager (not in the repo).
+
+## How to run locally
 Double-click `Ruffy Clinic Portal 2.0.command` on the Desktop, or:
 ```bash
 cd ~/ruffy-2.0/clinic-portal
 python3 -m streamlit run app.py --server.port 8506
 ```
 The `ANTHROPIC_API_KEY` env var enables real LLM extraction in the New Rx "Describe" mode. Without it, falls back to a regex/keyword mock parser.
+
+## How to push updates
+```bash
+cd ~/ruffy-2.0
+git add -A && git commit -m "your message" && git push
+```
+Streamlit Cloud auto-redeploys in ~1 minute.
 
 ## Surfaces
 
